@@ -48,7 +48,7 @@
             z-index: 2;
         }
 
-        /* --- SOBRE REAL Y ANIMACIÓN DE CARTA PROFESIONAL --- */
+        /* --- ANIMACIÓN DE SOBRE REAL Y CARTA EMERGENTE --- */
         #envelopeOverlay {
             position: fixed;
             top: 0;
@@ -65,47 +65,48 @@
             perspective: 1200px;
         }
 
-        .envelope-wrapper {
+        .envelope-container {
             position: relative;
             width: 340px;
-            height: 220px;
+            height: 230px;
             background: #d4c5ae; /* Fondo interior del sobre */
-            border-radius: 6px;
+            border-radius: 0 0 10px 10px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            overflow: visible;
         }
 
-        /* La carta oculta dentro del sobre */
+        /* La carta: se aloja inicialmente 100% oculta dentro del sobre */
         .envelope-letter {
             position: absolute;
             bottom: 10px;
             left: 15px;
             right: 15px;
-            height: 200px;
+            height: 190px;
             background: var(--wedding-cream);
             border-radius: 6px;
-            padding: 25px 20px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.15);
             z-index: 2;
             border: 1px solid var(--wedding-gold);
             box-sizing: border-box;
-            transform: translateY(0);
-            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, box-shadow 0.3s;
+            transform: translateY(20px); /* Oculta en la base del sobre */
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s; /* Retrasa la salida para que abra primero la solapa */
         }
 
-        /* Bolsillo frontal del sobre (tapa la mitad inferior de la carta) */
-        .envelope-pocket {
+        /* Bolsillo frontal que cubre la mitad inferior del sobre */
+        .envelope-front-pocket {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 140px;
             background: #e2d7c5; /* Tono exterior del sobre */
-            border-radius: 0 0 6px 6px;
-            clip-path: polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%);
-            z-index: 4;
+            border-radius: 0 0 10px 10px;
+            clip-path: polygon(0 0, 50% 45%, 100% 0, 100% 100%, 0 100%);
+            z-index: 5;
             pointer-events: none;
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.05);
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.06);
         }
 
         /* Solapa superior del sobre */
@@ -117,17 +118,17 @@
             height: 0;
             border-left: 170px solid transparent;
             border-right: 170px solid transparent;
-            border-top: 115px solid #c8b9a2;
+            border-top: 120px solid #c8b9a2;
             transform-origin: top;
-            transition: transform 0.6s ease-in-out;
-            z-index: 5;
+            transition: transform 0.5s ease-in-out;
+            z-index: 6;
             cursor: pointer;
         }
 
         /* Sello de cera dorada */
         .wax-seal {
             position: absolute;
-            top: 95px;
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
             width: 60px;
@@ -143,8 +144,8 @@
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.6);
             cursor: pointer;
-            z-index: 6;
-            transition: transform 0.3s, opacity 0.4s;
+            z-index: 7;
+            transition: transform 0.3s, opacity 0.3s;
             border: 2px dashed #fff2cc;
         }
 
@@ -152,33 +153,33 @@
             transform: translateX(-50%) scale(1.1);
         }
 
-        /* ESTADOS AL ABRIR EL SOBRE */
-        .envelope-wrapper.open .envelope-flap {
+        /* ACCIÓN DE APERTURA */
+        .envelope-container.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1;
         }
 
-        .envelope-wrapper.open .wax-seal {
+        .envelope-container.open .wax-seal {
             opacity: 0;
             pointer-events: none;
         }
 
-        .envelope-wrapper.open .envelope-letter {
-            transform: translateY(-140px); /* La carta se desliza hacia arriba saliendo del sobre */
-            z-index: 7;
+        .envelope-container.open .envelope-letter {
+            transform: translateY(-135px); /* La carta se desliza limpiamente hacia afuera */
+            z-index: 8;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
         .envelope-letter h2 {
             font-family: 'Playfair Display', serif;
             color: var(--wedding-deep-green);
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             margin: 0 0 8px 0;
         }
 
         .envelope-letter p {
-            font-size: 0.85rem;
-            line-height: 1.5;
+            font-size: 0.8rem;
+            line-height: 1.4;
             color: #555;
             margin: 0;
         }
@@ -587,16 +588,16 @@
 </head>
 <body>
 
-    <!-- SOBRE REAL CON CARTA INTERIOR OCULTA -->
+    <!-- SOBRE REAL Y CARTA EMERGENTE -->
     <div id="envelopeOverlay">
-        <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope-container" id="envelopeContainer">
             <!-- Carta adentro del sobre -->
             <div class="envelope-letter">
                 <h2>Yeniffer & Juan</h2>
                 <p>Has recibido una invitación especial al álbum de nuestra boda. ¡Bienvenidos a este gran día!</p>
             </div>
             <!-- Bolsillo frontal del sobre -->
-            <div class="envelope-pocket"></div>
+            <div class="envelope-front-pocket"></div>
             <!-- Solapa y Sello de Cera -->
             <div class="envelope-flap" onclick="openEnvelope()"></div>
             <div class="wax-seal" onclick="openEnvelope()">Y&J</div>
@@ -759,18 +760,18 @@
         });
 
         function openEnvelope() {
-            const wrapper = document.getElementById('envelopeWrapper');
-            if (!wrapper.classList.contains('open')) {
-                wrapper.classList.add('open');
+            const container = document.getElementById('envelopeContainer');
+            if (!container.classList.contains('open')) {
+                container.classList.add('open');
                 
-                // Espera a que termine la animación de salida de la carta para desvanecer la pantalla oscura
+                // Espera a que termine la animación de la carta saliendo para desvanecer el fondo oscuro
                 setTimeout(() => {
                     const overlay = document.getElementById('envelopeOverlay');
                     overlay.style.opacity = '0';
                     setTimeout(() => {
                         overlay.style.display = 'none';
                     }, 600);
-                }, 1500);
+                }, 1600);
             }
         }
 

@@ -56,7 +56,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* El valor 'fixed' al final crea el Parallax */
             background: linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover fixed;
             color: white;
             text-align: center;
@@ -75,7 +74,7 @@
             z-index: 2;
         }
 
-        /* --- INGENIERÍA DEL SOBRE 100% REAL --- */
+        /* --- INGENIERÍA DEL SOBRE Y ANIMACIÓN PERFECTA --- */
         #envelopeOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -115,13 +114,13 @@
             z-index: 2;
             border: 1px solid var(--wedding-gold);
             box-sizing: border-box;
-            transform: translateY(0);
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, z-index 0s 0.5s;
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            transform: translateY(0);
+            /* ELIMINADA LA TRANSICIÓN SIMPLE, AHORA USA KEYFRAMES ABAJO */
         }
 
         .envelope-letter h2 {
@@ -163,7 +162,7 @@
             clip-path: polygon(0 0, 100% 0, 50% 55%);
             z-index: 5;
             transform-origin: top;
-            transition: transform 0.6s ease-in-out, z-index 0s 0.6s;
+            transition: transform 0.6s ease-in-out;
             border-radius: 8px 8px 0 0;
         }
 
@@ -184,6 +183,7 @@
             transform: translateX(-50%) scale(1.1);
         }
 
+        /* --- ANIMACIONES AL ABRIR --- */
         .envelope-scene.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1; 
@@ -193,17 +193,36 @@
             opacity: 0;
         }
 
-        .envelope-scene.open .envelope-letter {
-            transform: translateY(-145px); 
-            z-index: 6; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        /* LA ANIMACIÓN PERFECTA RECUPERADA */
+        @keyframes extractLetter {
+            0% {
+                transform: translateY(0);
+                z-index: 2;
+            }
+            40% {
+                transform: translateY(-210px); 
+                z-index: 2;
+            }
+            45% {
+                transform: translateY(-210px);
+                z-index: 10; 
+            }
+            100% {
+                transform: translateY(-50px); 
+                z-index: 10;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            }
         }
+
+        .envelope-scene.open .envelope-letter {
+            animation: extractLetter 1.5s ease-in-out 0.5s forwards;
+        }
+
 
         /* --- PORTADA INVITADOS CON PARALLAX --- */
         #guestHero {
             display: none;
             height: 75vh;
-            /* Parallax activado aquí también con 'fixed' */
             background: linear-gradient(rgba(45, 74, 62, 0.75), rgba(45, 74, 62, 0.75)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover fixed;
             color: white;
             text-align: center;
@@ -534,13 +553,12 @@
 <body>
 
     <!-- REPRODUCTOR DE MÚSICA MAROON 5 OCULTO -->
-    <!-- Cambia el link de src por tu archivo de Maroon 5 cuando lo subas a GitHub -->
     <audio id="bgMusic" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     </audio>
     <button class="music-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
 
-    <!-- SOBRE REAL CON CARTA OCULTA Y ANIMACIÓN DE EXTRACCIÓN FLUIDA -->
+    <!-- SOBRE REAL CON ANIMACIÓN RECUPERADA -->
     <div id="envelopeOverlay">
         <div class="envelope-scene" id="envelopeScene" onclick="openEnvelope()">
             <div class="envelope-back"></div>
@@ -728,7 +746,7 @@
                     setTimeout(() => {
                         overlay.style.display = 'none';
                     }, 800);
-                }, 2500); 
+                }, 3000); 
             }
         }
 
@@ -753,7 +771,6 @@
         }
 
         function applyCoverStyle(type, src) {
-            // Se mantiene el "fixed" para que el efecto Parallax no se pierda al cambiar la imagen
             if (type === 'adminHero') {
                 document.getElementById('adminHeader').style.background = `linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('${src}') no-repeat center center / cover fixed`;
             } else if (type === 'guestHero') {

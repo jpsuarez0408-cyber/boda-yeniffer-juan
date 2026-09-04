@@ -120,7 +120,6 @@
             justify-content: center;
             align-items: center;
             transform: translateY(0);
-            /* ELIMINADA LA TRANSICIÓN SIMPLE, AHORA USA KEYFRAMES ABAJO */
         }
 
         .envelope-letter h2 {
@@ -193,7 +192,6 @@
             opacity: 0;
         }
 
-        /* LA ANIMACIÓN PERFECTA RECUPERADA */
         @keyframes extractLetter {
             0% {
                 transform: translateY(0);
@@ -528,10 +526,16 @@
             font-size: 2.5rem; margin-bottom: 20px;
         }
 
-        textarea {
-            width: 100%; max-width: 600px; height: 100px; padding: 15px;
+        #nameInput {
+            width: 100%; max-width: 600px; padding: 12px 15px;
             border: 1px solid #ddd; border-radius: 6px; font-family: 'Poppins', sans-serif;
-            resize: vertical; margin-bottom: 15px;
+            margin-bottom: 10px; box-sizing: border-box; font-size: 1rem;
+        }
+
+        textarea {
+            width: 100%; max-width: 600px; height: 100px; padding: 15px; box-sizing: border-box;
+            border: 1px solid #ddd; border-radius: 6px; font-family: 'Poppins', sans-serif;
+            resize: vertical; margin-bottom: 15px; font-size: 1rem;
         }
 
         .msg-list {
@@ -544,6 +548,10 @@
             font-size: 0.95rem; color: #333; min-height: 25px;
         }
 
+        .msg-item strong {
+            color: var(--wedding-deep-green);
+        }
+
         footer {
             text-align: center; padding: 30px; background-color: #1f332a;
             color: var(--wedding-gold); font-family: 'Playfair Display', serif;
@@ -552,13 +560,14 @@
 </head>
 <body>
 
-    <!-- REPRODUCTOR DE MÚSICA MAROON 5 OCULTO -->
+    <!-- REPRODUCTOR DE MÚSICA NOVEMBER RAIN -->
+    <!-- Recuerda subir a tu repositorio el archivo mp3 con el nombre exacto "november-rain.mp3" -->
     <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="november-rain.mp3" type="audio/mpeg">
     </audio>
     <button class="music-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
 
-    <!-- SOBRE REAL CON ANIMACIÓN RECUPERADA -->
+    <!-- SOBRE REAL CON ANIMACIÓN DE EXTRACCIÓN PERFECTA -->
     <div id="envelopeOverlay">
         <div class="envelope-scene" id="envelopeScene" onclick="openEnvelope()">
             <div class="envelope-back"></div>
@@ -673,6 +682,7 @@
     <div class="messages-section fade-in">
         <h2>Libro de Firmas</h2>
         <p style="color: #666; margin-bottom: 20px;">Déjanos tus buenos deseos para esta nueva etapa</p>
+        <input type="text" id="nameInput" placeholder="Tu nombre...">
         <textarea id="msgInput" placeholder="Escribe tu mensaje aquí..."></textarea><br>
         <button class="btn-action" onclick="addMessage()">Enviar Mensaje</button>
         <div class="msg-list" id="msg-list"></div>
@@ -721,6 +731,7 @@
             }
 
             renderGallery();
+            loadMessages();
         });
 
         // Lógica Música
@@ -729,10 +740,10 @@
             const btn = document.getElementById('musicBtn');
             if (music.paused) {
                 music.play();
-                btn.innerText = '⏸️'; // Icono pausa
+                btn.innerText = '⏸️'; 
             } else {
                 music.pause();
-                btn.innerText = '🎵'; // Icono música
+                btn.innerText = '🎵'; 
             }
         }
 
@@ -817,7 +828,6 @@
             });
         }
 
-        // Efecto Bokeh (Partículas circulares suaves desenfocadas)
         function createSparkles(containerId) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -826,10 +836,10 @@
                 sparkle.className = 'sparkle';
                 sparkle.style.left = Math.random() * 100 + '%';
                 sparkle.style.top = Math.random() * 100 + '%';
-                const size = Math.random() * 40 + 20 + 'px'; // Tamaños variados para Bokeh
+                const size = Math.random() * 40 + 20 + 'px'; 
                 sparkle.style.width = size;
                 sparkle.style.height = size;
-                sparkle.style.animationDuration = (Math.random() * 6 + 6) + 's'; // Movimiento lento
+                sparkle.style.animationDuration = (Math.random() * 6 + 6) + 's'; 
                 sparkle.style.animationDelay = (Math.random() * 5) + 's';
                 container.appendChild(sparkle);
             }
@@ -940,25 +950,49 @@
             alert("¡Preparando descarga del álbum '" + currentAlbumName + "'!");
         }
 
-        // TINTA VIVA: Animación de escritura letra por letra al añadir mensaje
+        // TINTA VIVA Y LOCALSTORAGE
+        function loadMessages() {
+            const saved = JSON.parse(localStorage.getItem('weddingMessages')) || [];
+            const list = document.getElementById('msg-list');
+            saved.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'msg-item';
+                div.innerHTML = `<strong>${item.name}:</strong> <span class="msg-text">${item.text}</span>`;
+                list.appendChild(div);
+            });
+        }
+
         function addMessage() {
+            const nameInput = document.getElementById('nameInput');
             const msgInput = document.getElementById('msgInput');
+            const name = nameInput.value.trim() || 'Invitado';
             const msg = msgInput.value.trim();
+
             if(msg) {
                 const list = document.getElementById('msg-list');
                 const div = document.createElement('div');
-                div.className = 'msg-item typewriter-cursor'; // Activa el cursor parpadeante
+                div.className = 'msg-item typewriter-cursor';
                 list.prepend(div);
+
+                // Guardar localmente
+                const saved = JSON.parse(localStorage.getItem('weddingMessages')) || [];
+                saved.unshift({name: name, text: msg});
+                localStorage.setItem('weddingMessages', JSON.stringify(saved));
+
+                div.innerHTML = `<strong>${name}:</strong> <span class="msg-text"></span>`;
+                const textSpan = div.querySelector('.msg-text');
+
                 msgInput.value = '';
+                nameInput.value = '';
 
                 let i = 0;
                 function typeWriter() {
                     if (i < msg.length) {
-                        div.innerText += msg.charAt(i);
+                        textSpan.innerHTML += msg.charAt(i);
                         i++;
-                        setTimeout(typeWriter, 35); // Velocidad de escritura (milisegundos)
+                        setTimeout(typeWriter, 35);
                     } else {
-                        div.classList.remove('typewriter-cursor'); // Apaga el cursor al terminar
+                        div.classList.remove('typewriter-cursor');
                     }
                 }
                 typeWriter();

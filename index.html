@@ -23,14 +23,41 @@
             overflow-x: hidden;
         }
 
-        /* --- PORTADA ADMIN --- */
+        /* --- MÚSICA FLOTANTE --- */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--wedding-gold);
+            color: white;
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.1);
+            background: var(--wedding-deep-green);
+        }
+
+        /* --- PORTADA ADMIN CON PARALLAX --- */
         header {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000') no-repeat center center/cover;
+            /* El valor 'fixed' al final crea el Parallax */
+            background: linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover fixed;
             color: white;
             text-align: center;
             position: relative;
@@ -48,7 +75,7 @@
             z-index: 2;
         }
 
-        /* --- INGENIERÍA DEL SOBRE Y ANIMACIÓN FLUIDA --- */
+        /* --- INGENIERÍA DEL SOBRE 100% REAL --- */
         #envelopeOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -70,7 +97,6 @@
             cursor: pointer;
         }
 
-        /* Capa 1: Fondo interior oscuro */
         .envelope-back {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -80,7 +106,6 @@
             z-index: 1;
         }
 
-        /* Capa 2: La Carta (Oculta inicialmente) */
         .envelope-letter {
             position: absolute;
             top: 15px; left: 15px; right: 15px; bottom: 15px;
@@ -90,6 +115,8 @@
             z-index: 2;
             border: 1px solid var(--wedding-gold);
             box-sizing: border-box;
+            transform: translateY(0);
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s, z-index 0s 0.5s;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -111,7 +138,6 @@
             margin: 0;
         }
 
-        /* Capa 3: Bolsillos frontales del sobre */
         .envelope-front-left {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #c4b59d;
@@ -131,18 +157,16 @@
             z-index: 4; border-radius: 8px;
         }
 
-        /* Capa 4: La Solapa */
         .envelope-flap {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: #dfd1bb;
             clip-path: polygon(0 0, 100% 0, 50% 55%);
             z-index: 5;
             transform-origin: top;
-            transition: transform 0.6s ease-in-out;
+            transition: transform 0.6s ease-in-out, z-index 0s 0.6s;
             border-radius: 8px 8px 0 0;
         }
 
-        /* Capa 5: Sello de Cera */
         .wax-seal {
             position: absolute;
             top: 95px; left: 50%; transform: translateX(-50%);
@@ -160,47 +184,27 @@
             transform: translateX(-50%) scale(1.1);
         }
 
-        /* --- ANIMACIONES AL ABRIR --- */
         .envelope-scene.open .envelope-flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Cae hacia atrás */
+            z-index: 1; 
         }
 
         .envelope-scene.open .wax-seal {
             opacity: 0;
         }
 
-        /* Secuencia: Sube por dentro -> Pasa al frente -> Baja y descansa */
-        @keyframes extractLetter {
-            0% {
-                transform: translateY(0);
-                z-index: 2;
-            }
-            40% {
-                transform: translateY(-210px); /* Sube completamente libre del bolsillo */
-                z-index: 2;
-            }
-            45% {
-                transform: translateY(-210px);
-                z-index: 10; /* Se coloca por delante de todas las capas del sobre */
-            }
-            100% {
-                transform: translateY(-50px); /* Baja suavemente y descansa al frente */
-                z-index: 10;
-                box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            }
-        }
-
         .envelope-scene.open .envelope-letter {
-            animation: extractLetter 1.5s ease-in-out 0.5s forwards;
+            transform: translateY(-145px); 
+            z-index: 6; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
         }
 
-
-        /* --- PORTADA EXCLUSIVA PARA INVITADOS --- */
+        /* --- PORTADA INVITADOS CON PARALLAX --- */
         #guestHero {
             display: none;
             height: 75vh;
-            background: linear-gradient(rgba(45, 74, 62, 0.75), rgba(45, 74, 62, 0.75)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=2000') no-repeat center center/cover;
+            /* Parallax activado aquí también con 'fixed' */
+            background: linear-gradient(rgba(45, 74, 62, 0.75), rgba(45, 74, 62, 0.75)), url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=2000') no-repeat center center / cover fixed;
             color: white;
             text-align: center;
             flex-direction: column;
@@ -225,29 +229,25 @@
             font-style: italic;
         }
 
+        /* --- PARTÍCULAS DE LUZ (EFECTO BOKEH) --- */
         .sparkle-container {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; pointer-events: none; z-index: 1;
         }
 
         .sparkle {
             position: absolute;
-            background: var(--wedding-gold);
             border-radius: 50%;
-            animation: floatUp 6s infinite ease-in-out;
-            opacity: 0.7;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.6) 0%, rgba(197, 160, 89, 0) 70%);
+            animation: floatUp infinite ease-in-out;
+            opacity: 0;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
 
         .scroll-indicator {
@@ -415,205 +415,142 @@
         #modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(253, 251, 247, 0.98);
-            color: #333;
-            padding: 40px;
-            overflow-y: auto;
-            z-index: 1000;
-            box-sizing: border-box;
+            color: #333; padding: 40px;
+            overflow-y: auto; z-index: 1000; box-sizing: border-box;
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
             border-bottom: 2px solid var(--wedding-gold);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
+            padding-bottom: 20px; margin-bottom: 30px;
+            flex-wrap: wrap; gap: 15px;
         }
 
         .modal-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            color: var(--wedding-deep-green);
-            margin: 0;
+            font-family: 'Playfair Display', serif; font-size: 2.5rem;
+            color: var(--wedding-deep-green); margin: 0;
         }
 
         .btn-action {
-            padding: 12px 20px;
-            cursor: pointer;
-            background: var(--wedding-deep-green);
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 6px;
+            padding: 12px 20px; cursor: pointer;
+            background: var(--wedding-deep-green); border: none;
+            color: white; font-weight: bold; border-radius: 6px;
             transition: background 0.3s;
         }
 
-        .btn-action:hover {
-            background: var(--wedding-gold);
-        }
+        .btn-action:hover { background: var(--wedding-gold); }
 
         .photo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
         }
 
         .photo-grid img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-            cursor: pointer;
+            width: 100%; height: 220px; object-fit: cover;
+            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s; cursor: pointer;
         }
 
-        .photo-grid img:hover {
-            transform: scale(1.02);
-        }
+        .photo-grid img:hover { transform: scale(1.02); }
 
         /* Visualizador y Slideshow */
         #viewer {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 2000;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            z-index: 2000; flex-direction: column;
+            align-items: center; justify-content: center;
         }
 
         #viewer img {
-            max-width: 85%;
-            max-height: 75vh;
-            border: 5px solid white;
-            border-radius: 4px;
-            object-fit: contain;
+            max-width: 85%; max-height: 75vh; border: 5px solid white;
+            border-radius: 4px; object-fit: contain;
         }
 
-        .viewer-controls {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
+        .viewer-controls { margin-top: 20px; display: flex; gap: 15px; }
         .viewer-controls button {
-            background: var(--wedding-gold);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
+            background: var(--wedding-gold); border: none; color: white;
+            padding: 10px 20px; font-weight: bold; border-radius: 4px;
+            cursor: pointer; font-family: 'Poppins', sans-serif;
         }
+        .viewer-controls button:hover { background: white; color: #333; }
 
-        .viewer-controls button:hover {
-            background: white;
-            color: #333;
+        /* --- TINTA VIVA (CURSOR PARPADEANTE) --- */
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: var(--wedding-gold);
+            font-weight: bold;
         }
+        @keyframes blink { 50% { opacity: 0; } }
 
         .thank-you-section {
-            background: var(--wedding-deep-green);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            margin-top: 50px;
+            background: var(--wedding-deep-green); color: white;
+            padding: 80px 20px; text-align: center; margin-top: 50px;
         }
 
         .thank-you-section h2 {
-            font-family: 'Playfair Display', serif;
-            color: var(--wedding-gold);
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif; color: var(--wedding-gold);
+            font-size: 3rem; margin-bottom: 20px;
         }
 
         .thank-you-section p {
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            font-weight: 300;
+            max-width: 700px; margin: 0 auto; font-size: 1.1rem;
+            line-height: 1.8; font-weight: 300;
         }
 
         .messages-section {
-            background-color: white;
-            padding: 60px 20px;
-            text-align: center;
+            background-color: white; padding: 60px 20px; text-align: center;
         }
 
         .messages-section h2 {
-            font-family: 'Playfair Display', serif;
-            color: var(--wedding-deep-green);
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            font-family: 'Playfair Display', serif; color: var(--wedding-deep-green);
+            font-size: 2.5rem; margin-bottom: 20px;
         }
 
         textarea {
-            width: 100%;
-            max-width: 600px;
-            height: 100px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-family: 'Poppins', sans-serif;
-            resize: vertical;
-            margin-bottom: 15px;
+            width: 100%; max-width: 600px; height: 100px; padding: 15px;
+            border: 1px solid #ddd; border-radius: 6px; font-family: 'Poppins', sans-serif;
+            resize: vertical; margin-bottom: 15px;
         }
 
         .msg-list {
-            max-width: 600px;
-            margin: 30px auto 0 auto;
-            text-align: left;
+            max-width: 600px; margin: 30px auto 0 auto; text-align: left;
         }
 
         .msg-item {
-            background: var(--wedding-cream);
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--wedding-gold);
-            font-size: 0.95rem;
-            color: #333;
+            background: var(--wedding-cream); padding: 15px; border-radius: 6px;
+            margin-bottom: 15px; border-left: 4px solid var(--wedding-gold);
+            font-size: 0.95rem; color: #333; min-height: 25px;
         }
 
         footer {
-            text-align: center;
-            padding: 30px;
-            background-color: #1f332a;
-            color: var(--wedding-gold);
-            font-family: 'Playfair Display', serif;
+            text-align: center; padding: 30px; background-color: #1f332a;
+            color: var(--wedding-gold); font-family: 'Playfair Display', serif;
         }
     </style>
 </head>
 <body>
 
+    <!-- REPRODUCTOR DE MÚSICA MAROON 5 OCULTO -->
+    <!-- Cambia el link de src por tu archivo de Maroon 5 cuando lo subas a GitHub -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-btn" onclick="toggleMusic()" id="musicBtn">🎵</button>
+
     <!-- SOBRE REAL CON CARTA OCULTA Y ANIMACIÓN DE EXTRACCIÓN FLUIDA -->
     <div id="envelopeOverlay">
         <div class="envelope-scene" id="envelopeScene" onclick="openEnvelope()">
             <div class="envelope-back"></div>
-            <!-- La carta, guardada estrictamente dentro de los bordes -->
             <div class="envelope-letter">
                 <h2>Yeniffer & Juan</h2>
                 <p>Has recibido una invitación especial al álbum de nuestra boda. ¡Bienvenidos a este gran día!</p>
             </div>
-            <!-- Bolsillos que cubren la carta -->
             <div class="envelope-front-left"></div>
             <div class="envelope-front-right"></div>
             <div class="envelope-front-bottom"></div>
-            <!-- Solapa y Sello de Cera -->
             <div class="envelope-flap"></div>
             <div class="wax-seal">Y&J</div>
         </div>
@@ -676,18 +613,15 @@
     </div>
 
     <div class="section-container fade-in">
-        <!-- Tarjeta QR -->
         <div class="qr-section" id="adminQrSection">
             <h3>Escanea para compartir el álbum</h3>
             <img src="qr-nuevo-boda.png" alt="Código QR del Álbum" style="width: 140px; height: 140px; object-fit: contain;">
         </div>
 
-        <!-- Título y Galería de Álbumes Ordenada -->
         <h2 class="gallery-title">Nuestros Momentos</h2>
         <div class="gallery" id="galleryContainer"></div>
     </div>
 
-    <!-- Ventana Modal de cada Álbum -->
     <div id="modal">
         <div class="modal-header">
             <h2 id="album-title"></h2>
@@ -702,7 +636,6 @@
         <div class="photo-grid" id="photo-grid"></div>
     </div>
 
-    <!-- Visualizador y Slideshow -->
     <div id="viewer">
         <img id="viewer-img" src="" alt="Vista ampliada">
         <div class="viewer-controls">
@@ -713,14 +646,12 @@
         </div>
     </div>
 
-    <!-- Sección de Agradecimiento de los Novios -->
     <div class="thank-you-section fade-in">
         <h2>Con Todo Nuestro Amor</h2>
         <p>Queremos agradecer de corazón a todos nuestros familiares y amigos por acompañarnos en el día más importante de nuestras vidas. Su presencia, sus risas y sus buenos deseos hicieron que esta celebración fuera verdaderamente inolvidable. Este álbum es un reflejo de los hermosos momentos que compartimos juntos.</p>
         <p style="margin-top: 25px; font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--wedding-gold);">Con amor, Yeniffer & Juan</p>
     </div>
 
-    <!-- Libro de Firmas y Mensajes -->
     <div class="messages-section fade-in">
         <h2>Libro de Firmas</h2>
         <p style="color: #666; margin-bottom: 20px;">Déjanos tus buenos deseos para esta nueva etapa</p>
@@ -774,19 +705,30 @@
             renderGallery();
         });
 
+        // Lógica Música
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicBtn');
+            if (music.paused) {
+                music.play();
+                btn.innerText = '⏸️'; // Icono pausa
+            } else {
+                music.pause();
+                btn.innerText = '🎵'; // Icono música
+            }
+        }
+
         function openEnvelope() {
             const scene = document.getElementById('envelopeScene');
             if (!scene.classList.contains('open')) {
                 scene.classList.add('open');
-                
-                // Da tiempo para ver toda la animación completa y leer la carta antes de entrar (3 segundos)
                 setTimeout(() => {
                     const overlay = document.getElementById('envelopeOverlay');
                     overlay.style.opacity = '0';
                     setTimeout(() => {
                         overlay.style.display = 'none';
                     }, 800);
-                }, 3000); 
+                }, 2500); 
             }
         }
 
@@ -811,10 +753,11 @@
         }
 
         function applyCoverStyle(type, src) {
+            // Se mantiene el "fixed" para que el efecto Parallax no se pierda al cambiar la imagen
             if (type === 'adminHero') {
-                document.getElementById('adminHeader').style.background = `linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('${src}') no-repeat center center/cover`;
+                document.getElementById('adminHeader').style.background = `linear-gradient(rgba(45, 74, 62, 0.6), rgba(45, 74, 62, 0.6)), url('${src}') no-repeat center center / cover fixed`;
             } else if (type === 'guestHero') {
-                document.getElementById('guestHero').style.background = `linear-gradient(rgba(45, 74, 62, 0.75), rgba(45, 74, 62, 0.75)), url('${src}') no-repeat center center/cover`;
+                document.getElementById('guestHero').style.background = `linear-gradient(rgba(45, 74, 62, 0.75), rgba(45, 74, 62, 0.75)), url('${src}') no-repeat center center / cover fixed`;
             }
         }
 
@@ -857,18 +800,19 @@
             });
         }
 
+        // Efecto Bokeh (Partículas circulares suaves desenfocadas)
         function createSparkles(containerId) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 30; i++) {
                 const sparkle = document.createElement('div');
                 sparkle.className = 'sparkle';
                 sparkle.style.left = Math.random() * 100 + '%';
                 sparkle.style.top = Math.random() * 100 + '%';
-                const size = Math.random() * 6 + 4 + 'px';
+                const size = Math.random() * 40 + 20 + 'px'; // Tamaños variados para Bokeh
                 sparkle.style.width = size;
                 sparkle.style.height = size;
-                sparkle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                sparkle.style.animationDuration = (Math.random() * 6 + 6) + 's'; // Movimiento lento
                 sparkle.style.animationDelay = (Math.random() * 5) + 's';
                 container.appendChild(sparkle);
             }
@@ -979,16 +923,28 @@
             alert("¡Preparando descarga del álbum '" + currentAlbumName + "'!");
         }
 
+        // TINTA VIVA: Animación de escritura letra por letra al añadir mensaje
         function addMessage() {
             const msgInput = document.getElementById('msgInput');
             const msg = msgInput.value.trim();
             if(msg) {
                 const list = document.getElementById('msg-list');
                 const div = document.createElement('div');
-                div.className = 'msg-item';
-                div.innerText = msg;
+                div.className = 'msg-item typewriter-cursor'; // Activa el cursor parpadeante
                 list.prepend(div);
                 msgInput.value = '';
+
+                let i = 0;
+                function typeWriter() {
+                    if (i < msg.length) {
+                        div.innerText += msg.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 35); // Velocidad de escritura (milisegundos)
+                    } else {
+                        div.classList.remove('typewriter-cursor'); // Apaga el cursor al terminar
+                    }
+                }
+                typeWriter();
             }
         }
     </script>

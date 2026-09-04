@@ -48,7 +48,7 @@
             z-index: 2;
         }
 
-        /* --- ANIMACIÓN DE SOBRE REAL CERRADO --- */
+        /* --- SOBRE CERRADO REAL (CARTA OCULTA ADENTRO) --- */
         #envelopeOverlay {
             position: fixed;
             top: 0;
@@ -65,18 +65,29 @@
             perspective: 1200px;
         }
 
-        .envelope-box {
+        .envelope-scene {
             position: relative;
             width: 100%;
             max-width: 360px;
             height: 240px;
-            background: #d9ccb6; /* Color de sobre de papel formal */
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            z-index: 2;
         }
 
-        /* Solapa triangular superior */
+        /* El cuerpo del sobre */
+        .envelope-body-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 240px;
+            background: #d9ccb6;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            z-index: 4;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Solapa superior del sobre */
         .envelope-flap {
             position: absolute;
             top: 0;
@@ -85,19 +96,20 @@
             height: 0;
             border-left: 180px solid transparent;
             border-right: 180px solid transparent;
-            border-top: 130px solid #c8b9a2; /* Tono de solapa cerrada */
+            border-top: 130px solid #c8b9a2;
             transform-origin: top;
-            transition: transform 0.7s ease-in-out;
-            z-index: 5;
+            transition: transform 0.6s ease-in-out;
+            z-index: 6;
             cursor: pointer;
+            pointer-events: auto;
         }
 
-        .envelope-box.open .envelope-flap {
+        .envelope-scene.open .envelope-flap {
             transform: rotateX(180deg);
             z-index: 1;
         }
 
-        /* Sello de cera dorada interactivo en la punta de la solapa */
+        /* Sello de cera dorada interactivo */
         .wax-seal {
             position: absolute;
             top: 110px;
@@ -116,7 +128,7 @@
             font-weight: bold;
             box-shadow: 0 6px 15px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.6);
             cursor: pointer;
-            z-index: 6;
+            z-index: 7;
             transition: transform 0.3s, opacity 0.4s;
             border: 2px dashed #fff2cc;
         }
@@ -125,24 +137,25 @@
             transform: translateX(-50%) scale(1.12);
         }
 
-        .envelope-box.open .wax-seal {
+        .envelope-scene.open .wax-seal {
             opacity: 0;
             pointer-events: none;
         }
 
-        /* La carta oculta dentro del sobre */
+        /* La carta inicialmente oculta por completo DENTRO del sobre */
         .envelope-letter {
             position: absolute;
-            bottom: 8px;
-            left: 8px;
-            right: 8px;
+            bottom: 5px;
+            left: 12px;
+            right: 12px;
             height: 220px;
             background: var(--wedding-cream);
             border-radius: 6px;
             padding: 25px 20px;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             z-index: 3;
+            transform: translateY(0); /* Oculta adentro */
             transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, z-index 0s 0.3s;
             display: flex;
             flex-direction: column;
@@ -152,10 +165,10 @@
             box-sizing: border-box;
         }
 
-        /* Animación cuando se abre: la carta se desliza hacia arriba saliendo del sobre */
-        .envelope-box.open .envelope-letter {
-            transform: translateY(-155px) scale(1.03);
-            z-index: 7;
+        /* Animación: la carta se desliza hacia arriba saliendo del sobre */
+        .envelope-scene.open .envelope-letter {
+            transform: translateY(-165px);
+            z-index: 5;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
@@ -577,15 +590,19 @@
 </head>
 <body>
 
-    <!-- SOBRE DE CARTA CERRADO CON SELLO INTERACTIVO -->
+    <!-- SOBRE CERRADO REAL (CARTA OCULTA ADENTRO) -->
     <div id="envelopeOverlay">
-        <div class="envelope-box" id="envelopeBox">
-            <div class="envelope-flap" onclick="openEnvelope()"></div>
-            <div class="wax-seal" onclick="openEnvelope()">Y&J</div>
+        <div class="envelope-scene" id="envelopeScene">
+            <!-- La carta dentro del sobre -->
             <div class="envelope-letter">
                 <h2>Yeniffer & Juan</h2>
-                <p>Has recibido una invitación especial al álbum de nuestra boda. ¡Bienvenidos!</p>
+                <p>Has recibido una invitación especial al álbum de nuestra boda. ¡Bienvenidos a este gran día!</p>
             </div>
+            <!-- Cuerpo frontal del sobre -->
+            <div class="envelope-body-container"></div>
+            <!-- Solapa y sello de cera -->
+            <div class="envelope-flap" onclick="openEnvelope()"></div>
+            <div class="wax-seal" onclick="openEnvelope()">Y&J</div>
         </div>
     </div>
 
@@ -745,12 +762,10 @@
         });
 
         function openEnvelope() {
-            // Abre la solapa del sobre y desliza la carta hacia arriba de forma fluida al hacer clic en el sello o solapa
-            const box = document.getElementById('envelopeBox');
-            if (!box.classList.contains('open')) {
-                box.classList.add('open');
+            const scene = document.getElementById('envelopeScene');
+            if (!scene.classList.contains('open')) {
+                scene.classList.add('open');
                 
-                // Espera a que termine la animación de apertura y desvanece el fondo para dejar ver el sitio
                 setTimeout(() => {
                     const overlay = document.getElementById('envelopeOverlay');
                     overlay.style.opacity = '0';
